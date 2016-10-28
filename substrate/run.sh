@@ -38,4 +38,9 @@ cd $DIR
 puppet apply \
   --confdir=${TMP_CONFIG_DIR} \
   --modulepath=${DIR}/modules \
+  --detailed-exitcodes \
   ${DIR}/manifests/init.pp
+
+puppet_result=$?
+(test $puppet_result -eq 0 || test $puppet_result -eq 2) && exit 0
+exit $puppet_result
