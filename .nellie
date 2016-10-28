@@ -1,6 +1,8 @@
 {
   "commands": [
-    "vagrant status",
-    "vagrant destroy --force ubuntu-10.04"
+    "vagrant up ubuntu-10.04",
+    "vagrant destroy --force ubuntu-10.04",
+    "vagrant up ubuntu-10.04-i386",
+    "vagrant destroy --force ubuntu-10.04-i386"
   ]
 }
