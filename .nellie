@@ -1,7 +1,6 @@
 {
   "commands": [
     "vagrant up ubuntu-10.04",
-    "vagrant ssh ubuntu-10.04 -c 'sudo /vagrant/substrate/run.sh /vagrant'",
     "vagrant destroy --force ubuntu-10.04"
   ]
 }
