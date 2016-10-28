@@ -2,5 +2,6 @@
   "commands": [
     "vagrant status"
   ],
-  "cleanup": "vagrant destroy --force"
+  "cleanup": "vagrant destroy --force",
+  "release": "Vagrant*"
 }
