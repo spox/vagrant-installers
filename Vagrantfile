@@ -4,7 +4,7 @@
 build_boxes = [
   'centos-5.11',
   'centos-5.11-i386',
-  'osx-10.7',
+  'osx-10.9',
   'ubuntu-10.04',
   'ubuntu-10.04-i386',
   'windows-7'
