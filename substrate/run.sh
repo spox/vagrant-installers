@@ -33,6 +33,9 @@ mkdir -p $1
 export FACTER_param_homebrew_user=${SUDO_USER}
 export FACTER_param_output_dir=$(cd $1; pwd)
 
+export TERM="vt100"
+export LANG="en_US.UTF-8"
+
 # Invoke Puppet
 cd "${DIR}"
 puppet apply \
