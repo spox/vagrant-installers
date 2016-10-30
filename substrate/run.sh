@@ -24,7 +24,7 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 # from a filesystem that doesn't support that (VMWare shared folders),
 # then Puppet will fail.
 TMP_CONFIG_DIR=$(mktemp -d -t vagrant-installer.XXXXXX)
-cp -R "${DIR}/config/*" ${TMP_CONFIG_DIR}
+cp -R "${DIR}/config/"* ${TMP_CONFIG_DIR}
 
 # Setup the output directory
 mkdir -p $1
