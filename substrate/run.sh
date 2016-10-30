@@ -17,7 +17,8 @@ fi
 # Find the directory of this script
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ] ; do SOURCE="$(readlink "$SOURCE")"; done
-DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+cd -P "$( dirname "$SOURCE" )"
+DIR=$( printf "%q\n" "$(pwd)")
 
 # We need to create a temporary configuration directory because Puppet
 # needs to be able to set the permissions on this and if we call this
