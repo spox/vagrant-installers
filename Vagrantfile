@@ -10,7 +10,7 @@ build_boxes = [
   'win-7'
 ]
 box_prefix = 'spox'
-script_base = 'https://raw.githubusercontent.com/spox/substrate-bootstrap/master/'
+script_base = 'https://raw.githubusercontent.com/spox/substrate-bootstrap/master'
 
 Vagrant.configure("2") do |config|
   build_boxes.each do |box_basename|
