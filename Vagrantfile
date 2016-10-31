@@ -7,7 +7,7 @@ build_boxes = [
   'osx-10.9',
   'ubuntu-10.04',
   'ubuntu-10.04-i386',
-  'windows-7'
+  'win-7'
 ]
 box_prefix = 'spox'
 script_base = 'https://raw.githubusercontent.com/spox/substrate-bootstrap/master/'
