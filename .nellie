@@ -1,7 +1,7 @@
 {
   "commands": [
-    "vagrant up osx-10.9",
-    "vagrant destroy --force osx-10.9"
+    "vagrant up win-7",
+    "vagrant destroy --force win-7"
   ],
   "cleanup": "vagrant destroy --force"
 }

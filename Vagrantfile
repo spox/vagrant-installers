@@ -18,10 +18,12 @@ Vagrant.configure("2") do |config|
       script_name = box_basename.split('-').first
       script_ext = script_name.include?('windows') ? 'ps1' : 'sh'
       provision_script = [script_base, "#{script_name}.#{script_ext}"].join('/')
-      provision_command = "curl -L '#{provision_script}' | sh"
 
       box_config.vm.box = "#{box_prefix}/#{box_basename}"
-      box_config.vm.provision "shell", :inline => provision_command
+      box_config.vm.provision "shell", :path => provision_script
+      if script_name.include?('windows')
+        box_config.vm.communicator = 'winrm'
+      end
 
       ["vmware_fusion", "vmware_workstation"].each do |p|
         config.vm.provider "p" do |v|
