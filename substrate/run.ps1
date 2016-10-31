@@ -39,7 +39,7 @@ $path = "C:\Program Files (x86)\Puppet Labs\Puppet\bin\puppet.bat"
 Set-Location $Dir
 $result = Start-Process -NoNewWindow -Wait -ArgumentList $arguments -FilePath $path
 
-if($result.ExitCode -ne 0 && $result.ExitCode -ne 2){
+if($result.ExitCode -ne 0 -And $result.ExitCode -ne 2){
   Exit $result.ExitCode
 } else {
   Exit 0
