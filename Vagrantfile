@@ -16,12 +16,12 @@ Vagrant.configure("2") do |config|
   build_boxes.each do |box_basename|
     config.vm.define(box_basename) do |box_config|
       script_name = box_basename.split('-').first
-      script_ext = script_name.include?('windows') ? 'ps1' : 'sh'
+      script_ext = script_name.start_with?('win') ? 'ps1' : 'sh'
       provision_script = [script_base, "#{script_name}.#{script_ext}"].join('/')
 
       box_config.vm.box = "#{box_prefix}/#{box_basename}"
       box_config.vm.provision "shell", :path => provision_script
-      if script_name.include?('windows')
+      if script_name.start_with?('win')
         box_config.vm.communicator = 'winrm'
       end
 
