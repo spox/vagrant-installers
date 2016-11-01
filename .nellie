@@ -1,7 +1,18 @@
 {
   "commands": [
+    "vagrant up ubuntu-10.04",
+    "vagrant destroy --force ubuntu-10.04",
+    "vagrant up ubuntu-10.04-i386",
+    "vagrant destroy --force ubuntu-10.04-i386",
+    "vagrant up centos-5.11",
+    "vagrant destroy --force centos-5.11",
+    "vagrant up centos-5.11-i386",
+    "vagrant destroy --force centos-5.11-i386",
+    "vagrant up osx-10.9",
+    "vagrant destroy --force osx-10.9",
     "vagrant up win-7",
     "vagrant destroy --force win-7"
   ],
-  "cleanup": "vagrant destroy --force"
+  "cleanup": "vagrant destroy --force",
+  "release": "substrate-assets/*"
 }
