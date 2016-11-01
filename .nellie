@@ -1,7 +1,7 @@
 {
   "commands": [
-    "vagrant up win-7",
-    "vagrant destroy --force win-7"
+    "vagrant up centos-5.11",
+    "vagrant destroy --force centos-5.11"
   ],
   "cleanup": "vagrant destroy --force"
 }
