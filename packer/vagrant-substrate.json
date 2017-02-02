@@ -1,0 +1,103 @@
+{
+  "variables": {
+    "build_iso": "{{env `BUILD_ISO`}}",
+    "build_md5": "{{env `BUILD_MD5`}}",
+    "atlas_token": "{{env `ATLAS_TOKEN`}}",
+    "vagrant_license_url": "{{env `VAGRANT_LICENSE_URL`}}",
+    "vmware_sn": "{{env `VMWARE_SN`}}",
+    "slug": "{{env `ATLAS_BUILD_SLUG`}}",
+    "name": "{{env `ATLAS_BUILD_NAME`}}",
+    "sha": "{{env `ATLAS_BUILD_GITHUB_COMMIT_SHA`}}",
+    "branch": "{{env `ATLAS_BUILD_GITHUB_BRANCH`}}",
+    "tag": "{{env `ATLAS_BUILD_GITHUB_TAG`}}",
+    "aws_access_key_id": "{{env `AWS_ACCESS_KEY_ID`}}",
+    "aws_secret_access_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
+    "aws_region": "{{env `AWS_REGION`}}",
+    "aws_bucket": "{{env `AWS_BUCKET`}}",
+    "packer_output": "{{env `PACKER_OUTPUT_DIRECTORY`}}",
+    "substrate_platform": "{{env `VAGRANT_SUBSTRATE_PLATFORM`}}"
+  },
+  "builders": [
+    {
+      "type": "vmware-iso",
+      "iso_url": "{{user `build_iso`}}",
+      "iso_checksum_type": "md5",
+      "iso_checksum": "{{user `build_md5`}}",
+      "ssh_username": "ubuntu",
+      "ssh_password": "",
+      "shutdown_command": "sudo shutdown -P now",
+      "skip_export": true,
+      "vmx_data": {
+        "memsize": "1536",
+        "vmx.allowNested": "TRUE",
+        "vhv.enable": "TRUE"
+      },
+      "output_directory": "{{user `packer_output`}}"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sudo parted /dev/sda mklabel gpt",
+        "sudo parted -a optimal /dev/sda mkpart linux-swap 0% 10%",
+        "sudo parted -a optimal /dev/sda mkpart primary 10% 100%",
+        "sleep 2",
+        "sudo mkswap /dev/sda1",
+        "sudo mkfs.ext4 /dev/sda2",
+        "sudo swapon /dev/sda1",
+        "sudo mount /dev/sda2 /mnt",
+        "sudo chmod 777 /mnt",
+        "sudo /usr/lib/vmware/bin/vmware-vmx-debug --new-sn {{user `vmware_sn`}}",
+        "sudo /etc/init.d/vmware stop || /bin/true",
+        "sudo mv /etc/init.d/vmware /tmp/vmware-init",
+        "sudo ln -s /bin/true /etc/init.d/vmware",
+        "sudo vmware-modconfig --console --install-all",
+        "sudo vmware-networks --postinstall vmnet1,0,1",
+        "cat /etc/vmware/networking",
+        "ip a",
+        "sudo rm /etc/init.d/vmware",
+        "sudo mv /tmp/vmware-init /etc/init.d/vmware",
+        "sudo /etc/init.d/vmware stop || /bin/true",
+        "sudo /etc/init.d/vmware start"
+      ]
+    },
+    {
+      "type": "file",
+      "source": ".",
+      "destination": "/mnt/source-dir"
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VAGRANT_HOME=/mnt/dot-vagrant",
+        "TMPDIR=/mnt/tmp",
+        "SOURCE_DIR=/mnt/source-dir",
+        "BUILD_SLUG={{user `slug`}}",
+        "BUILD_NAME={{user `name`}}",
+        "GIT_SHA={{user `sha`}}",
+        "GIT_BRANCH={{user `branch`}}",
+        "GIT_TAG={{user `tag`}}",
+        "AWS_ACCESS_KEY_ID={{user `aws_access_key_id`}}",
+        "AWS_SECRET_ACCESS_KEY={{user `aws_secret_access_key`}}",
+        "REGION={{user `aws_region`}}",
+        "SUBSTRATE_PLATFORM={{user `substrate_platform`}}"
+      ],
+      "inline": [
+        "ls -lh /mnt/source-dir",
+        "df -h",
+        "mkdir /mnt/dot-vagrant /mnt/tmp",
+        "vagrant login -t {{user `atlas_token`}}",
+        "vagrant plugin install vagrant-vmware-workstation",
+        "wget -O /mnt/license '{{user `vagrant_license_url`}}'",
+        "vagrant plugin license vagrant-vmware-workstation /mnt/license",
+        "cd ${SOURCE_DIR}",
+        "for PLAT in ${SUBSTRATE_PLATFORM}; do vagrant box add spox/${PLAT}; df -h; sleep 5; vagrant up ${PLAT}; vagrant destroy --force ${PLAT}; done",
+        "cd substrate-assets && ls -lh",
+        "aws s3 cp ./ s3://{{user `aws_bucket`}}/${GIT_TAG:-CI/$GIT_SHA} --recursive --exclude \"*\" --include \"*.zip\"",
+        "echo 'Substrate assets located at:'",
+        "for i in `ls`; do echo \"s3://{{user `aws_bucket`}}/${GIT_TAG:-CI/$GIT_SHA}/${i}\"; done"
+      ]
+    }
+  ]
+}
