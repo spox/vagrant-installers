@@ -28,6 +28,7 @@
       "shutdown_command": "sudo shutdown -P now",
       "skip_export": true,
       "vmx_data": {
+        "numvcpus": "3",
         "memsize": "4096",
         "vmx.allowNested": "TRUE",
         "vhv.enable": "TRUE"
