@@ -1,5 +1,5 @@
 {
   "commands": [
-    "packer build packer/vagrant-substrate.json"
+    "packer build -color=false -force packer/vagrant-substrate.json"
   ]
 }
